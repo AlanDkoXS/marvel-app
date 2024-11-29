@@ -3,11 +3,11 @@ import React from 'react';
 function CardsPerPage({ cardsPerPage, handleCardsPerPageChange }) {
   return (
     <div>
-      <label htmlFor="cardsPerPage">Tarjetas por página:</label>
+      <label htmlFor="cardsPerPage">Cards per page:</label>
       <select
         id="cardsPerPage"
-        value={cardsPerPage} // El valor se obtiene desde la referencia de cardsPerPage
-        onChange={handleCardsPerPageChange} // Llamar a la función para manejar el cambio
+        value={cardsPerPage}
+        onChange={handleCardsPerPageChange}
       >
         <option value={10}>10</option>
         <option value={25}>25</option>

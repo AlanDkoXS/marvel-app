@@ -6,7 +6,6 @@ import {
   fetchCharacterSuggestions,
 } from '../services/marvelService';
 
-// Estado inicial
 const initialState = {
   searchTerm: '',
   characters: [],
@@ -21,7 +20,6 @@ const initialState = {
   isSearching: false,
 };
 
-// Reductor para manejar el estado
 function wikiReducer(state, action) {
   switch (action.type) {
     case 'SET_SEARCH_TERM':
@@ -47,13 +45,11 @@ function wikiReducer(state, action) {
   }
 }
 
-// Hook personalizado para manejar la lógica de Wiki
 export function useWiki() {
   const [state, dispatch] = useReducer(wikiReducer, initialState);
   const navigate = useNavigate();
-  const cardsPerPageRef = useRef(10); // Valor predeterminado para tarjetas por página
+  const cardsPerPageRef = useRef(10);
 
-  // Verificar si el usuario está autenticado
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (!user) {
@@ -61,7 +57,6 @@ export function useWiki() {
     }
   }, [navigate]);
 
-  // Manejar cambios en el término de búsqueda
   const handleSearchChange = async (event) => {
     const query = event.target.value;
     dispatch({ type: 'SET_SEARCH_TERM', payload: query });
@@ -80,7 +75,6 @@ export function useWiki() {
     dispatch({ type: 'SET_PAGE', payload: 1 });
   };
 
-  // Realizar la búsqueda de personajes
   const handleSearch = async () => {
     if (!state.searchTerm) {
       dispatch({
@@ -97,7 +91,7 @@ export function useWiki() {
       const fetchedCharacters = await fetchCharacters(
         state.searchTerm,
         state.page,
-        cardsPerPageRef.current, // Usar el valor de cardsPerPage desde useRef
+        cardsPerPageRef.current,
       );
       if (fetchedCharacters.results.length === 0) {
         dispatch({
@@ -121,27 +115,23 @@ export function useWiki() {
     }
   };
 
-  // Cambiar la página de los resultados
   const handlePageChange = async (newPage) => {
     dispatch({ type: 'SET_PAGE', payload: newPage });
-    await handleSearch(); // Asegúrate de ejecutar la búsqueda para obtener los personajes de la nueva página
+    await handleSearch();
   };
 
-  // Calcular el total de páginas en base a los resultados y tarjetas por página
   const totalPages = Math.max(
     1,
     Math.ceil(state.total / cardsPerPageRef.current),
   );
 
-  // Cambiar la cantidad de tarjetas por página
-const handleCardsPerPageChange = async (event) => {
-    const newCardsPerPage = Number(event.target.value); // Convertir el valor a número
-    cardsPerPageRef.current = newCardsPerPage; // Actualizar la referencia de cardsPerPage
-    dispatch({ type: 'SET_PAGE', payload: 1 }); // Resetear la página a 1
+  const handleCardsPerPageChange = async (event) => {
+    const newCardsPerPage = Number(event.target.value);
+    cardsPerPageRef.current = newCardsPerPage;
+    dispatch({ type: 'SET_PAGE', payload: 1 });
 
-    // Si estamos buscando, refrescar los personajes con la nueva cantidad por página
     if (state.isSearching) {
-      await handleSearch(); // Hacer que handleSearch también sea asíncrono si lo es
+      await handleSearch();
     } else {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
@@ -155,8 +145,6 @@ const handleCardsPerPageChange = async (event) => {
     }
   };
 
-
-  // Manejar la selección de una sugerencia
   const handleSuggestionClick = async (suggestion) => {
     dispatch({ type: 'SET_SEARCH_TERM', payload: suggestion });
     dispatch({ type: 'SET_SUGGESTIONS', payload: [] });
@@ -169,7 +157,7 @@ const handleCardsPerPageChange = async (event) => {
     handleSearch,
     handlePageChange,
     handleCardsPerPageChange,
-    handleSuggestionClick, // Devolver la función
+    handleSuggestionClick,
     totalPages,
   };
 }

@@ -1,19 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { useReducer, useEffect } from 'react';
-import md5 from 'md5'; // Asegúrate de importar md5 correctamente
+import md5 from 'md5';
 import { fetchCharacterDetails } from '../services/marvelService';
 import { useAudio } from '../context/AudioContext';
 
-// Estado inicial
 const initialState = {
   character: null,
   comics: [],
-  view: 'comics', // Estado para controlar qué mostrar (comics, stories o events)
+  view: 'comics',
   loading: true,
   error: null,
 };
 
-// Reductor
 function wikiDetailsReducer(state, action) {
   switch (action.type) {
     case 'SET_CHARACTER':
@@ -37,10 +35,9 @@ const privateKey = import.meta.env.VITE_MARVEL_PRIVATE_API_KEY;
 const WikiDetails = () => {
   const { id } = useParams();
   const [state, dispatch] = useReducer(wikiDetailsReducer, initialState);
-  const { startAudio } = useAudio(); // Usar el contexto del audio
+  const { startAudio } = useAudio();
 
   useEffect(() => {
-    // Asegurarnos de que el audio comience cuando la página de detalles se carga
     startAudio();
 
     const fetchDetails = async () => {
@@ -49,7 +46,6 @@ const WikiDetails = () => {
         const characterDetails = await fetchCharacterDetails(id);
         dispatch({ type: 'SET_CHARACTER', payload: characterDetails });
 
-        // Obtener detalles de los cómics solo si hay cómics disponibles
         if (characterDetails?.comics?.items.length > 0) {
           const ts = new Date().getTime();
           const hash = md5(ts + privateKey + publicKey);
@@ -68,7 +64,7 @@ const WikiDetails = () => {
       } catch (error) {
         dispatch({
           type: 'SET_ERROR',
-          payload: 'Error al cargar los detalles del personaje',
+          payload: 'Error loading character details',
         });
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
@@ -77,22 +73,20 @@ const WikiDetails = () => {
     fetchDetails();
   }, [id, startAudio]);
 
-  // Función para cambiar la vista (comics, stories, events)
   const handleViewChange = (viewType) => {
     dispatch({ type: 'SET_VIEW', payload: viewType });
   };
 
-  if (state.loading) return <p>Cargando...</p>;
+  if (state.loading) return <p>Loading...</p>;
   if (state.error) return <p>{state.error}</p>;
-  if (!state.character)
-    return <p>No se encontraron detalles para este personaje.</p>;
+  if (!state.character) return <p>No details found for this character</p>;
 
   return (
     <div>
       <h1>{state.character.name}</h1>
       <p>
         {state.character.description ||
-          'No hay descripción disponible para este personaje.'}
+          'There is no description available for this character'}
       </p>
 
       <h2>Estadísticas base:</h2>
@@ -103,7 +97,6 @@ const WikiDetails = () => {
         <li>Eventos: {state.character?.events?.available || 0}</li>
       </ul>
 
-      {/* Botones para cambiar entre las vistas */}
       <div>
         <button onClick={() => handleViewChange('comics')}>
           Mostrar Cómics
@@ -116,10 +109,9 @@ const WikiDetails = () => {
         </button>
       </div>
 
-      {/* Mostrar Cómics */}
       {state.view === 'comics' && state.comics.length > 0 ? (
         <div>
-          <h2>Cómics en los que apareció:</h2>
+          <h2>Comics:</h2>
           <div>
             {state.comics.map((comic) => (
               <div key={comic.id}>
@@ -133,13 +125,12 @@ const WikiDetails = () => {
           </div>
         </div>
       ) : state.view === 'comics' && state.comics.length === 0 ? (
-        <p>No hay cómics disponibles para este personaje.</p>
+        <p>There are no comics available for this character</p>
       ) : null}
 
-      {/* Mostrar Historias */}
       {state.view === 'stories' && state.character.stories.items.length > 0 ? (
         <div>
-          <h2>Historias en las que apareció:</h2>
+          <h2>Stories</h2>
           <ul>
             {state.character.stories.items.map((story, index) => (
               <li key={index}>
@@ -156,13 +147,12 @@ const WikiDetails = () => {
         </div>
       ) : state.view === 'stories' &&
         state.character.stories.items.length === 0 ? (
-        <p>No hay historias disponibles para este personaje.</p>
+        <p>There are no stories available for this character</p>
       ) : null}
 
-      {/* Mostrar Eventos */}
       {state.view === 'events' && state.character.events.items.length > 0 ? (
         <div>
-          <h2>Eventos en los que apareció:</h2>
+          <h2>Events</h2>
           <ul>
             {state.character.events.items.map((event, index) => (
               <li key={index}>
@@ -179,7 +169,7 @@ const WikiDetails = () => {
         </div>
       ) : state.view === 'events' &&
         state.character.events.items.length === 0 ? (
-        <p>No hay eventos disponibles para este personaje.</p>
+        <p>There are no events available for this character</p>
       ) : null}
     </div>
   );

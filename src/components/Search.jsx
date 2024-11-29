@@ -12,7 +12,12 @@ function Search({
 }) {
   return (
     <div>
-      <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSearch();
+        }}
+      >
         <input
           type="text"
           value={searchTerm}
@@ -22,20 +27,20 @@ function Search({
         <button type="submit">Buscar</button>
       </form>
 
-      {/* Protección condicional en caso de que errors sea undefined */}
       {errors?.searchTerm && <p>{errors.searchTerm}</p>}
 
       {suggestions.length > 0 && (
         <ul>
           {suggestions.map((suggestion) => (
-            <li key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
+            <li
+              key={suggestion}
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
               {suggestion}
             </li>
           ))}
         </ul>
       )}
-
-      
     </div>
   );
 }

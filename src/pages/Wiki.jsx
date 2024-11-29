@@ -12,9 +12,8 @@ import Search from '../components/Search';
 import Pagination from '../components/Pagination';
 import CardsPerPage from '../components/CardsPerPage';
 import '../assets/styles/Wiki.css';
-import introAudio from '../assets/audio/intro.m4a'; // Ruta al archivo de audio
+import introAudio from '../assets/audio/intro.m4a';
 
-// Estado inicial
 const initialState = {
   searchTerm: '',
   characters: [],
@@ -29,7 +28,6 @@ const initialState = {
   totalCharacters: 0,
 };
 
-// Reductor para manejar el estado
 function wikiReducer(state, action) {
   switch (action.type) {
     case 'SET_SEARCH_TERM':
@@ -60,48 +58,40 @@ const Wiki = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const navigate = useNavigate();
 
-  // Reproductor de audio
   const audio = new Audio(introAudio);
-  audio.loop = false; // No repetir el audio
-  audio.volume = 1; // Volumen inicial a 100%
+  audio.loop = false;
+  audio.volume = 1;
 
-  // Función para reducir el volumen del audio
   const fadeOutAudio = () => {
-    let volume = 1; // Volumen inicial (100%)
-    const fadeDuration = 60000; // Duración del fade-out en milisegundos (30 segundos)
-    const fadeInterval = 300; // Cada cuánto disminuir el volumen (en milisegundos)
+    let volume = 1;
+    const fadeDuration = 60000;
+    const fadeInterval = 300;
 
-    // Intervalo para reducir el volumen progresivamente
     const fadeIntervalId = setInterval(() => {
-      volume -= 0.01; // Reducir el volumen en cada intervalo
+      volume -= 0.01;
       if (volume <= 0) {
-        clearInterval(fadeIntervalId); // Detener la reducción del volumen cuando llegue a 0
-        audio.pause(); // Detener el audio
+        clearInterval(fadeIntervalId);
+        audio.pause();
       }
-      audio.volume = Math.max(volume, 0); // Asegurarse de que el volumen no sea menor que 0
+      audio.volume = Math.max(volume, 0);
     }, fadeInterval);
   };
 
-  // Usar useEffect para reproducir el audio cuando el componente se monte
   useEffect(() => {
-    // Verificar si hay un usuario, si no redirigir a Home
     const user = localStorage.getItem('user');
     if (!user) {
       navigate('/');
     }
 
-    // Reproducir el audio y aplicar fade-out
-    audio.play(); // Reproducir el audio cuando la página cargue
-    fadeOutAudio(); // Comenzar el fade-out del audio
+    audio.play();
+    fadeOutAudio();
 
-    // Limpiar el audio cuando el componente se desmonte
     return () => {
       audio.pause();
       audio.currentTime = 0;
     };
-  }, [navigate]); // Este efecto solo se ejecuta una vez, al montar el componente
+  }, [navigate]);
 
-  // Obtener todos los personajes cuando no hay búsqueda activa
   useEffect(() => {
     const fetchAll = async () => {
       if (!state.isSearching) {
@@ -114,7 +104,7 @@ const Wiki = () => {
           dispatch({ type: 'SET_CHARACTERS', payload: characters });
           dispatch({ type: 'SET_TOTAL_CHARACTERS', payload: total });
         } catch (error) {
-          console.error('Error al obtener todos los personajes', error);
+          console.error('Error getting all characters', error);
         }
       }
     };
@@ -134,7 +124,7 @@ const Wiki = () => {
       const fetchedSuggestions = await fetchCharacterSuggestions(query);
       dispatch({ type: 'SET_SUGGESTIONS', payload: fetchedSuggestions });
     } catch (error) {
-      console.error('Error al obtener las sugerencias', error);
+      console.error('Error getting suggestions', error);
     }
   };
 
@@ -142,7 +132,7 @@ const Wiki = () => {
     if (!state.searchTerm) {
       dispatch({
         type: 'SET_ERRORS',
-        payload: { searchTerm: 'Por favor, ingresa un nombre de personaje' },
+        payload: { searchTerm: 'Enter a character name' },
       });
       return;
     }
@@ -160,7 +150,7 @@ const Wiki = () => {
         dispatch({
           type: 'SET_ERRORS',
           payload: {
-            searchTerm: 'No se encontraron personajes con ese nombre',
+            searchTerm: 'No characters found with that name',
           },
         });
       } else {
@@ -169,7 +159,9 @@ const Wiki = () => {
     } catch (error) {
       dispatch({
         type: 'SET_ERRORS',
-        payload: { searchTerm: 'Hubo un problema al buscar los personajes' },
+        payload: {
+          searchTerm: 'There was a problem searching for the characters',
+        },
       });
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -202,7 +194,7 @@ const Wiki = () => {
         dispatch({ type: 'SET_CHARACTERS', payload: characters });
         dispatch({ type: 'SET_TOTAL_CHARACTERS', payload: total });
       } catch (error) {
-        console.error('Error al obtener todos los personajes', error);
+        console.error('Error getting all characters', error);
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
@@ -215,7 +207,6 @@ const Wiki = () => {
     await handleSearch();
   };
 
-  // Actualizar el fondo
   const updateBackground = (imageUrl) => {
     setBackgroundImage(imageUrl);
   };
@@ -226,9 +217,8 @@ const Wiki = () => {
 
   return (
     <Layout backgroundImage={backgroundImage}>
-      <h1>Bienvenido {localStorage.getItem('user')}</h1>
+      <h1>Welcome {localStorage.getItem('user')}</h1>
 
-      {/* Sección de búsqueda */}
       <Search
         searchTerm={state.searchTerm}
         handleSearch={handleSearch}
@@ -240,13 +230,11 @@ const Wiki = () => {
         cardsPerPage={state.cardsPerPage}
       />
 
-      {/* Componente CardsPerPage */}
       <CardsPerPage
         cardsPerPage={state.cardsPerPage}
         handleCardsPerPageChange={handleCardsPerPageChange}
       />
 
-      {/* Mostrar personajes buscados */}
       {state.loading ? (
         <Loading />
       ) : (
@@ -261,12 +249,11 @@ const Wiki = () => {
               />
             ))
           ) : (
-            <p>No se encontraron personajes con ese nombre</p>
+            <p>No characters found with that name</p>
           )}
         </div>
       )}
 
-      {/* Paginación */}
       <Pagination
         page={state.page}
         handlePageChange={handlePageChange}

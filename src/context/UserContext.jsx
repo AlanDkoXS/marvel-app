@@ -1,4 +1,3 @@
-// src/context/UserContext.jsx
 import React, { createContext, useContext, useReducer } from 'react';
 
 const UserContext = createContext();

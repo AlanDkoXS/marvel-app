@@ -1,7 +1,5 @@
-// src/context/useReducer.js
 import React, { createContext, useReducer, useContext } from 'react';
 
-// Estado inicial
 const initialState = {
   user: localStorage.getItem('user') || '',
   searchTerm: '',
@@ -9,7 +7,6 @@ const initialState = {
   page: 1,
 };
 
-// Reducer para manejar las acciones
 const reducer = (state, action) => {
   switch (action.type) {
     case 'SET_USER':
@@ -26,10 +23,8 @@ const reducer = (state, action) => {
   }
 };
 
-// Crear contexto
 const AppContext = createContext();
 
-// Proveedor de contexto para envolver la aplicación
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -40,7 +35,6 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-// Custom hook para acceder al estado y al dispatch
 export const useAppContext = () => {
   return useContext(AppContext);
 };
