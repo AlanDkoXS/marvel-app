@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 :root {
-
   font-family: 'Bangers', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-/*   color-scheme: light dark; */
+  /*   color-scheme: light dark; */
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -13,12 +12,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x:hidden ;
+  overflow-x: hidden;
 
   --font-banger: 'Bangers', sans-serif;
   --layout-width: 100%;
   --layout-max-width: 1200px;
-  --header-background:#e62429;
+  --header-background: #e62429;
 }
 
 a {
@@ -78,33 +77,34 @@ h3 {
 }
 
 label {
-    margin: .5rem;
+  margin: 0.5rem;
 }
 
 button {
-    display: inline-block;
-    margin: 0.5rem 0.5rem;
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-family: 'Bangers', sans-serif;
-    font-weight: bold;
-    color: white;
-    background: #e62429;
-    text-transform: uppercase;
-    text-decoration: none;
-    text-align: center;
-    border: none;
-    border-radius: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  margin: 0.5rem 0.5rem;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-family: 'Bangers', sans-serif;
+  font-weight: bold;
+  color: white;
+  background: #e62429;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  border-radius: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 button:hover {
-    background: #c81e23;
-    transform: translateY(-4px);
+  background: #c81e23;
+  transform: translateY(-4px);
 }
-
 
 .input,
 .select {
@@ -120,7 +120,9 @@ button:hover {
   border: 2px solid #ccc;
   border-radius: 6px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .input:focus,
@@ -138,17 +140,16 @@ button:hover {
   background-size: 1rem;
 }
 
-.input[type="number"] {
-  -moz-appearance: textfield;
+.input[type='number'] {
   appearance: textfield;
+  -moz-appearance: textfield;
 }
 
-.input[type="number"]::-webkit-inner-spin-button,
-.input[type="number"]::-webkit-outer-spin-button {
+.input[type='number']::-webkit-inner-spin-button,
+.input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 
 .container__cards {
   display: grid;
@@ -164,12 +165,12 @@ button:hover {
 
 @media (min-width: 728px) {
   .container__cards {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 900px) {
   .container__cards {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }

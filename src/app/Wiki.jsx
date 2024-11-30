@@ -13,6 +13,7 @@ import Pagination from '../components/Pagination';
 import CardsPerPage from '../components/CardsPerPage';
 import '../assets/styles/Wiki.css';
 import introAudio from '../assets/audio/intro.m4a';
+import { useAudio } from '../context/AudioContext';
 
 const initialState = {
   searchTerm: '',
@@ -57,40 +58,24 @@ const Wiki = () => {
   const [state, dispatch] = useReducer(wikiReducer, initialState);
   const [backgroundImage, setBackgroundImage] = useState('');
   const navigate = useNavigate();
-
-  const audio = new Audio(introAudio);
-  audio.loop = false;
-  audio.volume = 1;
-
-  const fadeOutAudio = () => {
-    let volume = 1;
-    const fadeDuration = 60000;
-    const fadeInterval = 300;
-
-    const fadeIntervalId = setInterval(() => {
-      volume -= 0.01;
-      if (volume <= 0) {
-        clearInterval(fadeIntervalId);
-        audio.pause();
-      }
-      audio.volume = Math.max(volume, 0);
-    }, fadeInterval);
-  };
+  const { startAudio, stopAudio, isAudioPlaying } = useAudio();
 
   useEffect(() => {
+    // If audio is not playing, start it
+    if (!isAudioPlaying) {
+      startAudio(introAudio);  // Start audio when Wiki page is loaded
+    }
+
     const user = localStorage.getItem('user');
     if (!user) {
       navigate('/');
     }
 
-    audio.play();
-    fadeOutAudio();
-
     return () => {
-      audio.pause();
-      audio.currentTime = 0;
+      // Optionally stop or reset audio on unmount
+      stopAudio();
     };
-  }, [navigate]);
+  }, [navigate, startAudio, stopAudio, isAudioPlaying]);
 
   useEffect(() => {
     const fetchAll = async () => {
