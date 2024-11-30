@@ -89,24 +89,20 @@ const WikiDetails = () => {
           'There is no description available for this character'}
       </p>
 
-      <h2>Estadísticas base:</h2>
+      <h2>Stats:</h2>
       <ul>
         <li>Comics: {state.character?.comics?.available || 0}</li>
         <li>Series: {state.character?.series?.available || 0}</li>
-        <li>Historias: {state.character?.stories?.available || 0}</li>
-        <li>Eventos: {state.character?.events?.available || 0}</li>
+        <li>Stories: {state.character?.stories?.available || 0}</li>
+        <li>Events: {state.character?.events?.available || 0}</li>
       </ul>
 
       <div>
-        <button onClick={() => handleViewChange('comics')}>
-          Mostrar Cómics
-        </button>
+        <button onClick={() => handleViewChange('comics')}>Show Comics</button>
         <button onClick={() => handleViewChange('stories')}>
-          Mostrar Historias
+          Show Stories{' '}
         </button>
-        <button onClick={() => handleViewChange('events')}>
-          Mostrar Eventos
-        </button>
+        <button onClick={() => handleViewChange('events')}>Show Events </button>
       </div>
 
       {state.view === 'comics' && state.comics.length > 0 ? (

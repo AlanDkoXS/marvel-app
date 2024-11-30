@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Wiki from './pages/Wiki';
-import WikiDetails from './pages/WikiDetails';
-import { AudioProvider } from './context/AudioContext';
-import './assets/styles/App.css';
+import Home from '../app/Home';
+import Wiki from '../app/Wiki';
+import WikiDetails from '../app/WikiDetails';
+import { AudioProvider } from '../context/AudioContext';
+import '../assets/styles/App.css';
 
-function App() {
+function AppRoutes() {
   return (
     <AudioProvider>
       <Routes>
@@ -18,4 +18,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppRoutes;

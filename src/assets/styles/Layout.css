@@ -1,50 +1,48 @@
+.layout {
+  position: relative;
+  top: -4rem;
+  left: -2rem;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-size: cover;
+  background-position: 0% center;
+  animation:
+    moveBackground 200s linear infinite,
+    fadeIn 2s ease-in;
+}
+.layout__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: inherit;
+  background-size: cover;
+  background-position: inherit;
+  z-index: -1;
+}
 
+.layout__background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
 
-  .layout {
-    position: relative;
-    top: -4rem;
-    left: -2rem;
-    min-height: 100vh;  /* Asegura que ocupe toda la altura de la página */
-    width: 100vw;
-    overflow: hidden;
-    background-size: cover;
-    background-position: 0% center; /* La imagen comienza desde el borde izquierdo */
-    animation: moveBackground 200s linear infinite, fadeIn 2s ease-in; /* Animación de movimiento del fondo y fade-in */
+@keyframes moveBackground {
+  0% {
+    background-position: 0% center;
   }
-  .layout__background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: inherit;
-    background-size: cover;
-    background-position: inherit;
-    z-index: -1; /* Fondo detrás del contenido */
+  50% {
+    background-position: 100% center;
   }
-
-  /* Oscurecer la imagen de fondo usando un pseudo-elemento */
-  .layout__background::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.2); /* Ajusta la opacidad según el nivel de oscuridad que desees */
-    backdrop-filter: blur(10px); /* Difumina el fondo */
-    z-index: -1; /* Asegura que el overlay esté detrás del contenido */
+  100% {
+    background-position: 0% center;
   }
-
-  /* Animación de movimiento del fondo */
-  @keyframes moveBackground {
-    0% {
-      background-position: 0% center; /* Comienza desde el borde izquierdo */
-    }
-    50% {
-      background-position: 100% center; /* Se mueve completamente hacia la derecha */
-    }
-    100% {
-      background-position: 0% center; /* Regresa al borde izquierdo */
-    }
-  }
+}

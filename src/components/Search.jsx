@@ -22,9 +22,9 @@ function Search({
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          placeholder="Busca un personaje..."
+          placeholder="Search character..."
         />
-        <button type="submit">Buscar</button>
+        <button type="submit">Search</button>
       </form>
 
       {errors?.searchTerm && <p>{errors.searchTerm}</p>}
