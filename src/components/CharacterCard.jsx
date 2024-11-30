@@ -23,7 +23,7 @@ const CharacterCard = ({ character, updateBackground, clearBackground }) => {
         alt={character.name}
       />
       <h3>{character.name}</h3>
-      <Link to={`/wiki/${character.id}`}>Details</Link>
+      <Link to={`/wiki/${character.name}`}>Details</Link>
     </div>
   );
 };
