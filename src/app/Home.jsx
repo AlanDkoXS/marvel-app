@@ -33,6 +33,7 @@ const Home = () => {
         <label>
           Enter your name:
           <input
+            style={{ marginLeft: '.5rem' }}
             type="text"
             value={state.name}
             onChange={(e) =>

@@ -28,7 +28,6 @@
 }
 
 .layout__header img {
-  transform: translateY(2rem);
   height: 100%;
   max-width: 100%;
   object-fit: contain;
@@ -47,7 +46,7 @@
   right: 0;
   bottom: 0;
   background-image: inherit;
-  background-size: auto;
+  background-size: cover;
   background-position: inherit;
   z-index: -1;
 }
