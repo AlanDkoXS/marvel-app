@@ -61,40 +61,37 @@ const Wiki = () => {
   const { startAudio, stopAudio, isAudioPlaying } = useAudio();
 
   useEffect(() => {
-    // If audio is not playing, start it
-    if (!isAudioPlaying) {
-      startAudio(introAudio);  // Start audio when Wiki page is loaded
-    }
-
     const user = localStorage.getItem('user');
     if (!user) {
       navigate('/');
+      return;
     }
 
-    return () => {
-      // Optionally stop or reset audio on unmount
-      stopAudio();
-    };
+    if (!isAudioPlaying) {
+      startAudio(introAudio);
+    }
+
+    return () => stopAudio();
   }, [navigate, startAudio, stopAudio, isAudioPlaying]);
 
   useEffect(() => {
-    const fetchAll = async () => {
-      if (!state.isSearching) {
-        try {
-          const { characters, total } = await fetchAllCharacters(
-            state.page,
-            state.cardsPerPage,
-          );
-
-          dispatch({ type: 'SET_CHARACTERS', payload: characters });
-          dispatch({ type: 'SET_TOTAL_CHARACTERS', payload: total });
-        } catch (error) {
-          console.error('Error getting all characters', error);
-        }
-      }
-    };
-    fetchAll();
+    if (!state.isSearching) {
+      loadAllCharacters();
+    }
   }, [state.page, state.cardsPerPage, state.isSearching]);
+
+  const loadAllCharacters = async () => {
+    dispatch({ type: 'SET_LOADING', payload: true });
+    try {
+      const { characters, total } = await fetchAllCharacters(state.page, state.cardsPerPage);
+      dispatch({ type: 'SET_CHARACTERS', payload: characters });
+      dispatch({ type: 'SET_TOTAL_CHARACTERS', payload: total });
+    } catch (error) {
+      console.error('Error fetching characters:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  };
 
   const handleSearchChange = async (event) => {
     const query = event.target.value;
@@ -109,7 +106,7 @@ const Wiki = () => {
       const fetchedSuggestions = await fetchCharacterSuggestions(query);
       dispatch({ type: 'SET_SUGGESTIONS', payload: fetchedSuggestions });
     } catch (error) {
-      console.error('Error getting suggestions', error);
+      console.error('Error fetching suggestions:', error);
     }
   };
 
@@ -121,68 +118,43 @@ const Wiki = () => {
       });
       return;
     }
-    dispatch({ type: 'SET_ERRORS', payload: { searchTerm: '' } });
+
     dispatch({ type: 'SET_LOADING', payload: true });
     dispatch({ type: 'SET_IS_SEARCHING', payload: true });
+    dispatch({ type: 'SET_ERRORS', payload: { searchTerm: '' } });
 
     try {
-      const fetchedCharacters = await fetchCharacters(
-        state.searchTerm,
-        state.page,
-        state.cardsPerPage,
-      );
+      const fetchedCharacters = await fetchCharacters(state.searchTerm, state.page, state.cardsPerPage);
       if (fetchedCharacters.length === 0) {
         dispatch({
           type: 'SET_ERRORS',
-          payload: {
-            searchTerm: 'No characters found with that name',
-          },
+          payload: { searchTerm: 'No characters found with that name' },
         });
       } else {
-        dispatch({ type: 'SET_CHARACTERS', payload: fetchedCharacters || 0 });
+        dispatch({ type: 'SET_CHARACTERS', payload: fetchedCharacters });
       }
     } catch (error) {
+      console.error('Error fetching characters:', error);
       dispatch({
         type: 'SET_ERRORS',
-        payload: {
-          searchTerm: 'There was a problem searching for the characters',
-        },
+        payload: { searchTerm: 'There was a problem fetching characters' },
       });
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
-  const handlePageChange = (newPage) => {
-    dispatch({ type: 'SET_PAGE', payload: newPage });
-  };
-
-  const totalPages = Math.ceil(state.totalCharacters / state.cardsPerPage);
+  const handlePageChange = (newPage) => dispatch({ type: 'SET_PAGE', payload: newPage });
 
   const handleCardsPerPageChange = async (event) => {
     const newCardsPerPage = Number(event.target.value);
-    dispatch({
-      type: 'SET_CARDS_PER_PAGE',
-      payload: newCardsPerPage,
-    });
+    dispatch({ type: 'SET_CARDS_PER_PAGE', payload: newCardsPerPage });
     dispatch({ type: 'SET_PAGE', payload: 1 });
 
     if (state.isSearching) {
       await handleSearch();
     } else {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      try {
-        const { characters, total } = await fetchAllCharacters(
-          state.page,
-          state.cardsPerPage,
-        );
-        dispatch({ type: 'SET_CHARACTERS', payload: characters });
-        dispatch({ type: 'SET_TOTAL_CHARACTERS', payload: total });
-      } catch (error) {
-        console.error('Error getting all characters', error);
-      } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
-      }
+      loadAllCharacters();
     }
   };
 
@@ -192,18 +164,11 @@ const Wiki = () => {
     await handleSearch();
   };
 
-  const updateBackground = (imageUrl) => {
-    setBackgroundImage(imageUrl);
-  };
-
-  const clearBackground = () => {
-    setBackgroundImage('');
-  };
+  const totalPages = Math.ceil(state.totalCharacters / state.cardsPerPage);
 
   return (
     <Layout backgroundImage={backgroundImage}>
       <h1>Welcome {localStorage.getItem('user')}</h1>
-
       <Search
         searchTerm={state.searchTerm}
         handleSearch={handleSearch}
@@ -211,15 +176,11 @@ const Wiki = () => {
         errors={state.errors}
         handleSearchChange={handleSearchChange}
         handleSuggestionClick={handleSuggestionClick}
-        handleCardsPerPageChange={handleCardsPerPageChange}
-        cardsPerPage={state.cardsPerPage}
       />
-
       <CardsPerPage
         cardsPerPage={state.cardsPerPage}
         handleCardsPerPageChange={handleCardsPerPageChange}
       />
-
       {state.loading ? (
         <Loading />
       ) : (
@@ -229,8 +190,8 @@ const Wiki = () => {
               <CharacterCard
                 key={character.id}
                 character={character}
-                updateBackground={updateBackground}
-                clearBackground={clearBackground}
+                updateBackground={setBackgroundImage}
+                clearBackground={() => setBackgroundImage('')}
               />
             ))
           ) : (
@@ -238,11 +199,9 @@ const Wiki = () => {
           )}
         </div>
       )}
-
       <Pagination
         page={state.page}
         handlePageChange={handlePageChange}
-        cardsPerPage={state.cardsPerPage}
         totalPages={totalPages}
       />
     </Layout>
