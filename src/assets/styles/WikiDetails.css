@@ -1,0 +1,37 @@
+/* Contenedor de los cómics en Grid */
+.wiki__details .comics {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(64px, 1fr)
+  ); /* Asegura que las imágenes se ajusten al ancho disponible */
+  gap: 1rem; /* Espacio entre los elementos */
+  justify-items: center; /* Centra cada cómic dentro de su celda */
+  max-width: 100%;
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Estilo para cada cómic */
+.wiki__details .comic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.wiki__details .comic img {
+  width: 64px;
+  height: auto;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.5rem;
+}
+
+.wiki__details .comic p {
+  font-size: 0.9rem;
+  color: #fff;
+  max-width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

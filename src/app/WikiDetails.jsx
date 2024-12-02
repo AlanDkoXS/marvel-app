@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchCharacterDetails, fetchComics } from '../hooks/useFetch';
 import { useAudio } from '../context/AudioContext';
+import Layout from '../components/Layout';
+import '../assets/styles/WikiDetails.css';
 
 const WikiDetails = () => {
   const { name } = useParams();
@@ -12,7 +14,6 @@ const WikiDetails = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Mantén el audio si no está reproduciéndose
     if (!isAudioPlaying) {
       startAudio('/ruta-audio/intro.m4a');
     }
@@ -60,39 +61,42 @@ const WikiDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <Link to="/wiki">Back</Link>
-      <div>
-        <h1>{character.name}</h1>
-        <p>{character.description || 'No description available'}</p>
-        {character.thumbnail ? (
-          <img
-            src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-            alt={character.name}
-          />
-        ) : (
-          <p>No image available</p>
-        )}
+    <Layout>
+      <div className="wiki__details">
+        <Link to="/wiki">Back</Link>
+        <div>
+          <h1>{character.name}</h1>
+          <p>{character.description || 'No description available'}</p>
+          {character.thumbnail ? (
+            <img
+              src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+              alt={character.name}
+              className="character-image"
+            />
+          ) : (
+            <p>No image available</p>
+          )}
+        </div>
+        <div>
+          <h2>Comics:</h2>
+          {comics.length > 0 ? (
+            <div className="comics">
+              {comics.map((comic) => (
+                <div key={comic.id} className="comic">
+                  <img
+                    src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                    alt={comic.title}
+                  />
+                  <p>{comic.title}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No comics available</p>
+          )}
+        </div>
       </div>
-      <div>
-        <h2>Comics:</h2>
-        {comics.length > 0 ? (
-          <div>
-            {comics.map((comic) => (
-              <div key={comic.id}>
-                <img
-                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                  alt={comic.title}
-                />
-                <p>{comic.title}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No comics available</p>
-        )}
-      </div>
-    </div>
+    </Layout>
   );
 };
 
