@@ -1,48 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useFetch } from '../hooks/useFetch';
 
-function Search({
-  searchTerm,
-  handleSearch,
-  suggestions,
-  errors,
-  handleSearchChange,
-  handleSuggestionClick,
-  handleCardsPerPageChange,
-  cardsPerPage,
-}) {
+const Search = ({ handleSearch }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const { data, loading, error } = useFetch(searchTerm, 1, 10);
+
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const onSearch = async () => {
+    setIsSearching(true);
+    handleSearch(data);
+    setIsSearching(false);
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSearch();
-        }}
-      >
+    <div className="search">
+      <div>
         <input
-          type="text"
+          type="search"
+          placeholder="Search Marvel Characters"
           value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search character..."
+          onChange={handleInputChange}
         />
-        <button type="submit">Search</button>
-      </form>
+        <button onClick={onSearch}>Search</button>
+      </div>
 
-      {errors?.searchTerm && <p>{errors.searchTerm}</p>}
-
-      {suggestions.length > 0 && (
-        <ul>
-          {suggestions.map((suggestion) => (
-            <li
-              key={suggestion}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
+      {data.length > 0 && !isSearching && (
+        <div className="suggestions">
+          <ul>
+            {data.map((character) => (
+              <li key={character.id}>{character.name}</li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
-}
+};
 
 export default Search;

@@ -29,12 +29,12 @@
 }
 
 .layout__header img {
-    transform: translateY(2rem);
+  transform: translateY(2rem);
   height: 100%;
   max-width: 100%;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
-  transition: transform 0.3s ease; /* Smooth hover effect */
+  transition: transform 0.3s ease;
 }
 
 .layout__header img:hover {

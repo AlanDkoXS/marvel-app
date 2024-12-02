@@ -169,10 +169,10 @@ select {
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(1, 1fr);
-  gap: 1rem;
-  padding: 1.2rem;
+  gap: .5rem;
+  padding: .2rem;
   grid-auto-rows: 1fr;
-  width: 150px;
+  width: 100vw;
   max-width: 100%;
   margin: 0 auto;
 }

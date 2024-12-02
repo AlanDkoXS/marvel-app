@@ -1,76 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  fetchCharacterDetails,
-  fetchComicDetails,
-} from '../services/marvelService';
+import { fetchCharacterDetails, fetchComics } from '../hooks/useFetch';
 
 const WikiDetails = () => {
-  const { id } = useParams();
+  const { name } = useParams();
   const [character, setCharacter] = useState(null);
   const [comics, setComics] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [comicsLoading, setComicsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [comicsError, setComicsError] = useState(null);
 
   useEffect(() => {
-    const fetchCharacter = async () => {
+    if (!name) {
+      setError('The character name is invalid.');
+      setLoading(false);
+      return;
+    }
+
+    const loadCharacterData = async () => {
       setLoading(true);
       setError(null);
+
       try {
-        const fetchedCharacter = await fetchCharacterDetails(id);
+        const fetchedCharacter = await fetchCharacterDetails(name);
         setCharacter(fetchedCharacter);
+
+        if (
+          fetchedCharacter.comics &&
+          fetchedCharacter.comics.items.length > 0
+        ) {
+          const fetchedComics = await Promise.all(
+            fetchedCharacter.comics.items.map((comic) =>
+              fetchComics(comic.resourceURI),
+            ),
+          );
+          setComics(fetchedComics);
+        } else {
+          setComics([]);
+        }
       } catch (err) {
-        setError(err.message || 'Failed to fetch character details');
+        setError(err.message || 'Error loading details');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCharacter();
-  }, [id]);
+    loadCharacterData();
+  }, [name]);
 
-  useEffect(() => {
-    const fetchComics = async () => {
-      if (!character) return;
-
-      setComicsLoading(true);
-      setComicsError(null);
-
-      try {
-        const comicsData = await Promise.all(
-          character.comics.items.map((comic) =>
-            fetchComicDetails(comic.resourceURI),
-          ),
-        );
-        setComics(comicsData);
-      } catch (err) {
-        setComicsError(err.message || 'Failed to fetch comics');
-      } finally {
-        setComicsLoading(false);
-      }
-    };
-
-    fetchComics();
-  }, [character]);
-
-  if (loading || comicsLoading) return <p>Loading...</p>;
-  if (error || comicsError) return <p>{error || comicsError}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="wiki-details">
       <Link to="/wiki" className="back-button">
-        ← Back to Wiki
+        Back
       </Link>
       <div className="character-info">
         <h1>{character.name}</h1>
         <p>{character.description || 'No description available'}</p>
-        <img
-          src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-          alt={character.name}
-          className="character-image"
-        />
+        {character.thumbnail ? (
+          <img
+            src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+            alt={character.name}
+            className="character-image"
+          />
+        ) : (
+          <p>No image available</p>
+        )}
       </div>
       <div className="comics-info">
         <h2>Comics:</h2>
