@@ -172,14 +172,15 @@ select {
   gap: .5rem;
   padding: .2rem;
   grid-auto-rows: 1fr;
-  width: 100vw;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 @media (min-width: 728px) {
   .container__cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

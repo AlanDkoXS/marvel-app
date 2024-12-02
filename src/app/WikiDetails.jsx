@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchCharacterDetails, fetchComics } from '../hooks/useFetch';
+import { useAudio } from '../context/AudioContext';
 
 const WikiDetails = () => {
   const { name } = useParams();
+  const { isAudioPlaying, startAudio } = useAudio();
   const [character, setCharacter] = useState(null);
   const [comics, setComics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Mantén el audio si no está reproduciéndose
+    if (!isAudioPlaying) {
+      startAudio('/ruta-audio/intro.m4a');
+    }
+  }, [isAudioPlaying, startAudio]);
 
   useEffect(() => {
     if (!name) {
@@ -47,37 +56,33 @@ const WikiDetails = () => {
     loadCharacterData();
   }, [name]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <h2>Loading...</h2>;
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="wiki-details">
-      <Link to="/wiki" className="back-button">
-        Back
-      </Link>
-      <div className="character-info">
+    <div>
+      <Link to="/wiki">Back</Link>
+      <div>
         <h1>{character.name}</h1>
         <p>{character.description || 'No description available'}</p>
         {character.thumbnail ? (
           <img
             src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
             alt={character.name}
-            className="character-image"
           />
         ) : (
           <p>No image available</p>
         )}
       </div>
-      <div className="comics-info">
+      <div>
         <h2>Comics:</h2>
         {comics.length > 0 ? (
-          <div className="comics-list">
+          <div>
             {comics.map((comic) => (
-              <div key={comic.id} className="comic-card">
+              <div key={comic.id}>
                 <img
                   src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
                   alt={comic.title}
-                  className="comic-thumbnail"
                 />
                 <p>{comic.title}</p>
               </div>

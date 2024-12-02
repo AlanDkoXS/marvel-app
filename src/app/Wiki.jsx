@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import Search from '../components/Search';
 import CharacterCard from '../components/CharacterCard';
 import Loading from '../components/Loading';
 import Pagination from '../components/Pagination';
@@ -11,7 +12,7 @@ import introAudio from '../assets/audio/intro.m4a';
 import { useAudio } from '../context/AudioContext';
 
 const Wiki = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('spider-man');
   const [page, setPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
   const [backgroundImage, setBackgroundImage] = useState('');
@@ -40,6 +41,11 @@ const Wiki = () => {
     return () => stopAudio();
   }, [navigate, startAudio, stopAudio, isAudioPlaying]);
 
+  const handleSearch = (newSearchTerm) => {
+    setSearchTerm(newSearchTerm);
+    setPage(1);
+  };
+
   const handlePageChange = (newPage) => setPage(newPage);
 
   const handleCardsPerPageChange = (event) => {
@@ -51,20 +57,17 @@ const Wiki = () => {
   return (
     <Layout backgroundImage={backgroundImage}>
       <h1>Welcome {localStorage.getItem('user')}</h1>
-      <div className="search-section">
-        <input
-          type="text"
-          placeholder="Search for characters"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <Search handleSearch={handleSearch} />
+
       <CardsPerPage
         cardsPerPage={cardsPerPage}
         handleCardsPerPageChange={handleCardsPerPageChange}
       />
+
       {loading ? (
         <Loading />
+      ) : error ? (
+        <p>Error: {error}</p>
       ) : (
         <div className="container__cards">
           {characters.length > 0 ? (
@@ -81,6 +84,7 @@ const Wiki = () => {
           )}
         </div>
       )}
+
       <Pagination
         page={page}
         handlePageChange={handlePageChange}
