@@ -54,9 +54,8 @@ const Home = () => {
       {user ? (
         <>
           <h1>Welcome back, {user}!</h1>
-          <button onClick={handleGoToWiki}>Go to Wiki</button>
+          <button onClick={handleGoToWiki}>Enter</button>
           <button onClick={handleLogout}>Logout</button>
-
         </>
       ) : (
         <>

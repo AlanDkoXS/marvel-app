@@ -7,7 +7,7 @@ margin-top: 2rem;
   grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
   gap: 1rem;
   justify-items: center;
-  max-width: 96%;
+  max-width: 98%;
   width: 100%;
   padding: 1rem;
 }
@@ -40,3 +40,36 @@ margin-top: 2rem;
   height: 300px;
   border-radius: 100%;
 }
+
+.wiki__details .series {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    max-width: 96%;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .wiki__details .serie {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .wiki__details .serie__image {
+    width: 64px;
+    height: auto;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+  }
+
+  .wiki__details .serie p {
+    font-size: 0.9rem;
+    color: #fff;
+    max-width: 64px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

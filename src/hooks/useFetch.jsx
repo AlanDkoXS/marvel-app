@@ -4,7 +4,11 @@ import md5 from 'md5';
 const publicKey = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
 const privateKey = import.meta.env.VITE_MARVEL_PRIVATE_API_KEY;
 
-const fetchCharacters = async (searchTerm = '', page = 1, cardsPerPage = 10) => {
+const fetchCharacters = async (
+  searchTerm = '',
+  page = 1,
+  cardsPerPage = 10,
+) => {
   const ts = new Date().getTime();
   const hash = md5(ts + privateKey + publicKey);
 
@@ -39,6 +43,8 @@ const fetchCharacters = async (searchTerm = '', page = 1, cardsPerPage = 10) => 
       description: character.description || 'No description available',
       thumbnail: character.thumbnail,
       comics: character.comics,
+      stories: character.stories,
+      series: character.series,
     };
   });
 };
@@ -55,7 +61,7 @@ const fetchCharacterDetails = async (name) => {
   });
 
   const response = await fetch(
-    `https://gateway.marvel.com/v1/public/characters?${queryParams.toString()}`
+    `https://gateway.marvel.com/v1/public/characters?${queryParams.toString()}`,
   );
 
   const data = await response.json();
@@ -70,6 +76,8 @@ const fetchCharacterDetails = async (name) => {
     description: data.data.results[0].description || 'No description available',
     thumbnail: data.data.results[0].thumbnail,
     comics: data.data.results[0].comics,
+    stories: data.data.results[0].stories,
+    series: data.data.results[0].series,
   };
 };
 
@@ -78,13 +86,47 @@ const fetchComics = async (resourceURI) => {
   const hash = md5(ts + privateKey + publicKey);
 
   const response = await fetch(
-    `${resourceURI}?ts=${ts}&apikey=${publicKey}&hash=${hash}`
+    `${resourceURI}?ts=${ts}&apikey=${publicKey}&hash=${hash}`,
   );
 
   const data = await response.json();
 
   if (data.code !== 200 || !data.data || !data.data.results) {
     throw new Error('Comic details not found');
+  }
+
+  return data.data.results[0];
+};
+
+const fetchStories = async (resourceURI) => {
+  const ts = new Date().getTime();
+  const hash = md5(ts + privateKey + publicKey);
+
+  const response = await fetch(
+    `${resourceURI}?ts=${ts}&apikey=${publicKey}&hash=${hash}`,
+  );
+
+  const data = await response.json();
+
+  if (data.code !== 200 || !data.data || !data.data.results) {
+    throw new Error('Story details not found');
+  }
+
+  return data.data.results[0];
+};
+
+const fetchSeries = async (resourceURI) => {
+  const ts = new Date().getTime();
+  const hash = md5(ts + privateKey + publicKey);
+
+  const response = await fetch(
+    `${resourceURI}?ts=${ts}&apikey=${publicKey}&hash=${hash}`,
+  );
+
+  const data = await response.json();
+
+  if (data.code !== 200 || !data.data || !data.data.results) {
+    throw new Error('Series details not found');
   }
 
   return data.data.results[0];
@@ -101,7 +143,11 @@ const useFetch = (searchTerm = '', page = 1, cardsPerPage = 10) => {
       setError(null);
 
       try {
-        const fetchedData = await fetchCharacters(searchTerm, page, cardsPerPage);
+        const fetchedData = await fetchCharacters(
+          searchTerm,
+          page,
+          cardsPerPage,
+        );
         setData(fetchedData);
       } catch (err) {
         setError(err.message || 'Failed to fetch characters');
@@ -116,5 +162,11 @@ const useFetch = (searchTerm = '', page = 1, cardsPerPage = 10) => {
   return { data, loading, error };
 };
 
-export { fetchCharacters, fetchCharacterDetails, fetchComics };
+export {
+  fetchCharacters,
+  fetchCharacterDetails,
+  fetchComics,
+  fetchStories,
+  fetchSeries,
+};
 export default useFetch;

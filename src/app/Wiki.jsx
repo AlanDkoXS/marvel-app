@@ -55,17 +55,15 @@ const Wiki = () => {
   };
 
   return (
-    <Layout backgroundImage={backgroundImage}> {/* Usamos el fondo desde el contexto */}
+    <Layout backgroundImage={backgroundImage}>
+      {' '}
+      {/* Usamos el fondo desde el contexto */}
       <h1>Welcome {localStorage.getItem('user')}</h1>
-
-      {/* Integrate Search Component */}
       <Search handleSearch={handleSearch} />
-
       <CardsPerPage
         cardsPerPage={cardsPerPage}
         handleCardsPerPageChange={handleCardsPerPageChange}
       />
-
       {loading ? (
         <Loading />
       ) : error ? (
@@ -85,7 +83,6 @@ const Wiki = () => {
           )}
         </div>
       )}
-
       <Pagination
         page={page}
         handlePageChange={handlePageChange}
