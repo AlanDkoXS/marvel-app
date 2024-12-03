@@ -3,11 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { fetchCharacterDetails, fetchComics } from '../hooks/useFetch';
 import { useAudio } from '../context/AudioContext';
 import Layout from '../components/Layout';
+import { useBackground } from '../context/BackgroundContext';
 import '../assets/styles/WikiDetails.css';
 
 const WikiDetails = () => {
   const { name } = useParams();
   const { isAudioPlaying, startAudio } = useAudio();
+  const { backgroundImage, setBackgroundImage } = useBackground();
   const [character, setCharacter] = useState(null);
   const [comics, setComics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,22 +63,22 @@ const WikiDetails = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <Layout>
+    <Layout backgroundImage={backgroundImage}>
       <div className="wiki__details">
-        <div className='comic__container'>
+        <div className="comic__container">
           {character.thumbnail ? (
-              <img
+            <img
               src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
               alt={character.name}
               className="character__image"
-              />
-            ) : (
-                <p>No image available</p>
-            )}
+            />
+          ) : (
+            <p>No image available</p>
+          )}
           <h1>{character.name}</h1>
           <p>{character.description || 'No description available'}</p>
         </div>
-            <Link to="/wiki">Back</Link>
+        <Link to="/wiki">Back</Link>
         <div>
           <h2>Comics:</h2>
           {comics.length > 0 ? (

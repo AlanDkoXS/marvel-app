@@ -10,12 +10,12 @@ import useFetch from '../hooks/useFetch';
 import '../assets/styles/Wiki.css';
 import introAudio from '../assets/audio/intro.m4a';
 import { useAudio } from '../context/AudioContext';
-
+import { useBackground } from '../context/BackgroundContext';
 const Wiki = () => {
   const [searchTerm, setSearchTerm] = useState('captain');
   const [page, setPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
-  const [backgroundImage, setBackgroundImage] = useState('');
+  const { backgroundImage, setBackgroundImage } = useBackground();
   const navigate = useNavigate();
   const { startAudio, stopAudio, isAudioPlaying } = useAudio();
 
@@ -55,7 +55,7 @@ const Wiki = () => {
   };
 
   return (
-    <Layout defaultBackground="url-to-default-image.jpg" backgroundImage={backgroundImage}>
+    <Layout backgroundImage={backgroundImage}> {/* Usamos el fondo desde el contexto */}
       <h1>Welcome {localStorage.getItem('user')}</h1>
 
       {/* Integrate Search Component */}
@@ -78,7 +78,6 @@ const Wiki = () => {
                 key={character.id}
                 character={character}
                 updateBackground={setBackgroundImage}
-                clearBackground={() => setBackgroundImage('')}
               />
             ))
           ) : (

@@ -20,7 +20,7 @@ const Layout = ({ children, backgroundImage }) => {
           className="layout__background"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         ></div>
-        <div className="layout__overlay"></div> {/* Capa con el degradado */}
+        <div className="layout__overlay"></div>
       </div>
       <div className="layout__content">{children}</div>
     </div>

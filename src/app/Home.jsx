@@ -54,12 +54,13 @@ const Home = () => {
       {user ? (
         <>
           <h1>Welcome back, {user}!</h1>
-          <button onClick={handleGoToWiki}>Enter</button>
+          <button onClick={handleGoToWiki}>Go to Wiki</button>
           <button onClick={handleLogout}>Logout</button>
+
         </>
       ) : (
         <>
-          <h1>Welcome to the Marvel app</h1>
+          <h1>Welcome to Marvel Universe</h1>
           <form onSubmit={handleSubmit}>
             <label>
               Enter your name:

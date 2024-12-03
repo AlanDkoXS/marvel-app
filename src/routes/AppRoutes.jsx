@@ -4,6 +4,7 @@ import Home from '../app/Home';
 import Wiki from '../app/Wiki';
 import WikiDetails from '../app/WikiDetails';
 import { AudioProvider } from '../context/AudioContext';
+import { BackgroundProvider } from '../context/BackgroundContext';
 import '../assets/styles/App.css';
 import useFetch from '../hooks/useFetch';
 
@@ -17,11 +18,13 @@ function AppRoutes() {
 
   return (
     <AudioProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/wiki" element={<Wiki />} />
-        <Route path="/wiki/:name" element={<WikiDetails />} />
-      </Routes>
+      <BackgroundProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/wiki" element={<Wiki />} />
+          <Route path="/wiki/:name" element={<WikiDetails />} />
+        </Routes>
+      </BackgroundProvider>
     </AudioProvider>
   );
 }
