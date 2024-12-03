@@ -55,7 +55,7 @@ const Wiki = () => {
   };
 
   return (
-    <Layout backgroundImage={backgroundImage}>
+    <Layout defaultBackground="url-to-default-image.jpg" backgroundImage={backgroundImage}>
       <h1>Welcome {localStorage.getItem('user')}</h1>
 
       {/* Integrate Search Component */}
