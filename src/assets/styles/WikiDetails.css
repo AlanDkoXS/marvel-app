@@ -1,12 +1,13 @@
+.wiki__details {
+margin-top: 2rem;
+}
+
 .wiki__details .comics {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(64px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
   gap: 1rem;
   justify-items: center;
-  max-width: 100%;
+  max-width: 96%;
   width: 100%;
   padding: 1rem;
 }
@@ -35,5 +36,7 @@
 }
 
 .character__image {
-    width: 300px;
+  width: 300px;
+  height: 300px;
+  border-radius: 100%;
 }

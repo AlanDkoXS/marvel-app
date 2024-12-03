@@ -187,6 +187,6 @@ select {
 
 @media (min-width: 900px) {
   .container__cards {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }

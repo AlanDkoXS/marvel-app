@@ -4,10 +4,9 @@
   align-items: center;
   justify-content: center;
   width: 200px;
-  height: auto;
+  height: 350px;
   margin: auto;
   background: linear-gradient(145deg, #000, #1f1f1f);
-
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   transition:
@@ -15,15 +14,18 @@
     box-shadow 0.3s ease;
 }
 
+.character__card h3 {
+    font-size: 1em;
+}
+
 .character__card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.9);
 }
 
 .character__card img {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
   border-bottom: 2px solid #ffcc00;
 }
 

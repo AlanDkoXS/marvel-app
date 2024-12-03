@@ -12,7 +12,7 @@ import introAudio from '../assets/audio/intro.m4a';
 import { useAudio } from '../context/AudioContext';
 
 const Wiki = () => {
-  const [searchTerm, setSearchTerm] = useState('spider-man');
+  const [searchTerm, setSearchTerm] = useState('captain');
   const [page, setPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
   const [backgroundImage, setBackgroundImage] = useState('');
@@ -57,6 +57,8 @@ const Wiki = () => {
   return (
     <Layout backgroundImage={backgroundImage}>
       <h1>Welcome {localStorage.getItem('user')}</h1>
+
+      {/* Integrate Search Component */}
       <Search handleSearch={handleSearch} />
 
       <CardsPerPage

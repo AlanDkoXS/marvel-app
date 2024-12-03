@@ -63,9 +63,7 @@ const WikiDetails = () => {
   return (
     <Layout>
       <div className="wiki__details">
-        <div>
-          <h1>{character.name}</h1>
-          <p>{character.description || 'No description available'}</p>
+        <div className='comic__container'>
           {character.thumbnail ? (
               <img
               src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
@@ -75,6 +73,8 @@ const WikiDetails = () => {
             ) : (
                 <p>No image available</p>
             )}
+          <h1>{character.name}</h1>
+          <p>{character.description || 'No description available'}</p>
         </div>
             <Link to="/wiki">Back</Link>
         <div>

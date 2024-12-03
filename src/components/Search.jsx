@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 const Search = ({ handleSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -11,7 +10,7 @@ const Search = ({ handleSearch }) => {
   const onSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      handleSearch(searchTerm.trim()); // Enviar el término de búsqueda al componente padre
+      handleSearch(searchTerm.trim());
     }
   };
 
