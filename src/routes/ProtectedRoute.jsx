@@ -1,9 +1,7 @@
-import { Navigate } from "react-router-dom";
-import { useUser } from "../context/UserContext";
+import { Navigate } from 'react-router';
 
-const ProtectedRoute = ({ children }) => {
-  const { state } = useUser();
-  return state.user ? children : <Navigate to="/" />;
-};
+// The app's "login" only stores a name in localStorage (see app/Home.jsx).
+const ProtectedRoute = ({ children }) =>
+  localStorage.getItem('user') ? children : <Navigate to="/" replace />;
 
 export default ProtectedRoute;

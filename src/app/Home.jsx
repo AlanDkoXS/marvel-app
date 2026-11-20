@@ -1,5 +1,5 @@
-import { useReducer, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useReducer, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const initialState = {
   name: '',
@@ -17,15 +17,8 @@ function homeReducer(state, action) {
 const Home = () => {
   const [state, dispatch] = useReducer(homeReducer, initialState);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => localStorage.getItem('user'));
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(savedUser);
-    }
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

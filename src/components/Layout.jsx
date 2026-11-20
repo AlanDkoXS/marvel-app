@@ -1,13 +1,12 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import "../assets/styles/Layout.css";
-import headerImage from "../assets/image/header.png";
+import { useNavigate } from 'react-router';
+import '../assets/styles/Layout.css';
+import headerImage from '../assets/image/header.png';
 
 const Layout = ({ children, backgroundImage }) => {
   const navigate = useNavigate();
 
   const handleHeaderClick = () => {
-    navigate("/");
+    navigate('/');
   };
 
   return (

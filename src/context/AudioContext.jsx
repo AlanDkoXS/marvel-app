@@ -1,51 +1,54 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from 'react';
 import introAudio from '../assets/audio/intro.m4a';
 
-const AudioContext = createContext();
+const FADE_STEP = 0.01;
+const FADE_INTERVAL_MS = 200; // 100 steps * 200 ms = 20 s fade-out
+
+const AudioContext = createContext(null);
 
 export const useAudio = () => useContext(AudioContext);
 
 export const AudioProvider = ({ children }) => {
-  const [audio] = useState(new Audio(introAudio));
-  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   useEffect(() => {
-    if (isPlaying) {
-      audio.play();
-      fadeOutAudio();
-    }
+    if (!isAudioPlaying) return undefined;
 
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, [audio, isPlaying]);
-
-  const fadeOutAudio = () => {
-    let volume = 1;
-    const fadeDuration = 60000;
-    const fadeInterval = 200;
+    audioRef.current ??= new Audio(introAudio);
+    const audio = audioRef.current;
+    audio.volume = 1;
+    // play() rejects when the browser blocks autoplay; there's nothing to do.
+    audio.play().catch(() => {});
 
     const fadeIntervalId = setInterval(() => {
-      volume -= 0.01;
-      if (volume <= 0) {
+      const volume = Math.max(audio.volume - FADE_STEP, 0);
+      audio.volume = volume;
+      if (volume === 0) {
         clearInterval(fadeIntervalId);
         audio.pause();
       }
-      audio.volume = Math.max(volume, 0);
-    }, fadeInterval);
-  };
+    }, FADE_INTERVAL_MS);
 
-  const startAudio = () => {
-    setIsPlaying(true);
-  };
+    return () => {
+      clearInterval(fadeIntervalId);
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, [isAudioPlaying]);
 
-  const stopAudio = () => {
-    setIsPlaying(false);
-  };
+  const startAudio = useCallback(() => setIsAudioPlaying(true), []);
+  const stopAudio = useCallback(() => setIsAudioPlaying(false), []);
 
   return (
-    <AudioContext.Provider value={{ startAudio, stopAudio }}>
+    <AudioContext.Provider value={{ isAudioPlaying, startAudio, stopAudio }}>
       {children}
     </AudioContext.Provider>
   );

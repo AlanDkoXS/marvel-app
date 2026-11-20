@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router';
 import {
   fetchCharacterDetails,
   fetchComics,
   fetchSeries,
   fetchStories,
-} from '../hooks/useFetch'; // Asegúrate de que estas funciones estén disponibles
+} from '../hooks/useFetch';
 import { useAudio } from '../context/AudioContext';
 import Layout from '../components/Layout';
 import { useBackground } from '../context/BackgroundContext';
@@ -16,7 +16,7 @@ import '../assets/styles/WikiDetails.css';
 
 const WikiDetails = () => {
   const { name } = useParams();
-  const { isAudioPlaying, startAudio } = useAudio();
+  const { startAudio } = useAudio();
   const { backgroundImage } = useBackground();
   const [character, setCharacter] = useState(null);
   const [comics, setComics] = useState([]);
@@ -27,17 +27,11 @@ const WikiDetails = () => {
   const [activeSection, setActiveSection] = useState('comics');
 
   useEffect(() => {
-    if (!isAudioPlaying) {
-      startAudio('/ruta-audio/intro.m4a');
-    }
-  }, [isAudioPlaying, startAudio]);
+    startAudio();
+  }, [startAudio]);
 
   useEffect(() => {
-    if (!name) {
-      setError('The character name is invalid.');
-      setLoading(false);
-      return;
-    }
+    let ignore = false;
 
     const loadCharacterData = async () => {
       setLoading(true);
@@ -45,66 +39,45 @@ const WikiDetails = () => {
 
       try {
         const fetchedCharacter = await fetchCharacterDetails(name);
-        setCharacter(fetchedCharacter);
+        // Three requests in total: one per collection, not one per item.
+        const [fetchedComics, fetchedSeries, fetchedStories] =
+          await Promise.all([
+            fetchComics(fetchedCharacter.id),
+            fetchSeries(fetchedCharacter.id),
+            fetchStories(fetchedCharacter.id),
+          ]);
 
-        // Cargar los cómics
-        if (
-          fetchedCharacter.comics &&
-          fetchedCharacter.comics.items.length > 0
-        ) {
-          const fetchedComics = await Promise.all(
-            fetchedCharacter.comics.items.map((comic) =>
-              fetchComics(comic.resourceURI),
-            ),
-          );
+        if (!ignore) {
+          setCharacter(fetchedCharacter);
           setComics(fetchedComics);
-        } else {
-          setComics([]);
-        }
-
-        if (
-          fetchedCharacter.series &&
-          fetchedCharacter.series.items.length > 0
-        ) {
-          const fetchedSeries = await Promise.all(
-            fetchedCharacter.series.items.map((serie) =>
-              fetchSeries(serie.resourceURI),
-            ),
-          );
           setSeries(fetchedSeries);
-        } else {
-          setSeries([]);
-        }
-
-        if (
-          fetchedCharacter.stories &&
-          fetchedCharacter.stories.items.length > 0
-        ) {
-          const fetchedStories = await Promise.all(
-            fetchedCharacter.stories.items.map((story) =>
-              fetchStories(story.resourceURI),
-            ),
-          );
           setStories(fetchedStories);
-        } else {
-          setStories([]);
         }
       } catch (err) {
-        setError(err.message || 'Error loading details');
+        if (!ignore) {
+          setError(err.message || 'Error loading details');
+        }
       } finally {
-        setLoading(false);
+        if (!ignore) {
+          setLoading(false);
+        }
       }
     };
 
     loadCharacterData();
+    return () => {
+      ignore = true;
+    };
   }, [name]);
 
-  const handleSectionChange = (section) => {
-    setActiveSection(section);
-  };
-
   if (loading) return <h2>Loading...</h2>;
-  if (error) return <p>{error}</p>;
+  if (error)
+    return (
+      <Layout backgroundImage={backgroundImage}>
+        <p>{error}</p>
+        <Link to="/wiki">Back</Link>
+      </Layout>
+    );
 
   return (
     <Layout backgroundImage={backgroundImage}>
@@ -120,16 +93,14 @@ const WikiDetails = () => {
             <p>No image available</p>
           )}
           <h1>{character.name}</h1>
-          <p>{character.description || 'No description available'}</p>
+          <p>{character.description}</p>
         </div>
         <Link to="/wiki">Back</Link>
 
         <div className="section__buttons">
-          <button onClick={() => handleSectionChange('comics')}>Comics</button>
-          <button onClick={() => handleSectionChange('series')}>Series</button>
-          <button onClick={() => handleSectionChange('stories')}>
-            Stories
-          </button>
+          <button onClick={() => setActiveSection('comics')}>Comics</button>
+          <button onClick={() => setActiveSection('series')}>Series</button>
+          <button onClick={() => setActiveSection('stories')}>Stories</button>
         </div>
 
         <div className="section__content">

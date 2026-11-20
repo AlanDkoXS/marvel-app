@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import Search from '../components/Search';
 import CharacterCard from '../components/CharacterCard';
@@ -8,38 +7,30 @@ import Pagination from '../components/Pagination';
 import CardsPerPage from '../components/CardsPerPage';
 import useFetch from '../hooks/useFetch';
 import '../assets/styles/Wiki.css';
-import introAudio from '../assets/audio/intro.m4a';
 import { useAudio } from '../context/AudioContext';
 import { useBackground } from '../context/BackgroundContext';
+
 const Wiki = () => {
   const [searchTerm, setSearchTerm] = useState('captain');
   const [page, setPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
-  const { backgroundImage, setBackgroundImage } = useBackground();
-  const navigate = useNavigate();
-  const { startAudio, stopAudio, isAudioPlaying } = useAudio();
+  const { backgroundImage, setBackgroundImage, clearBackground } =
+    useBackground();
+  const { startAudio, stopAudio } = useAudio();
 
   const {
     data: characters,
+    total,
     loading,
     error,
   } = useFetch(searchTerm, page, cardsPerPage);
 
-  const totalPages = Math.ceil(characters.length / cardsPerPage);
+  const totalPages = Math.ceil(total / cardsPerPage);
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (!user) {
-      navigate('/');
-      return;
-    }
-
-    if (!isAudioPlaying) {
-      startAudio(introAudio);
-    }
-
-    return () => stopAudio();
-  }, [navigate, startAudio, stopAudio, isAudioPlaying]);
+    startAudio();
+    return stopAudio;
+  }, [startAudio, stopAudio]);
 
   const handleSearch = (newSearchTerm) => {
     setSearchTerm(newSearchTerm);
@@ -49,15 +40,12 @@ const Wiki = () => {
   const handlePageChange = (newPage) => setPage(newPage);
 
   const handleCardsPerPageChange = (event) => {
-    const newCardsPerPage = Number(event.target.value);
-    setCardsPerPage(newCardsPerPage);
+    setCardsPerPage(Number(event.target.value));
     setPage(1);
   };
 
   return (
     <Layout backgroundImage={backgroundImage}>
-      {' '}
-      {/* Usamos el fondo desde el contexto */}
       <h1>Welcome {localStorage.getItem('user')}</h1>
       <Search handleSearch={handleSearch} />
       <CardsPerPage
@@ -76,6 +64,7 @@ const Wiki = () => {
                 key={character.id}
                 character={character}
                 updateBackground={setBackgroundImage}
+                clearBackground={clearBackground}
               />
             ))
           ) : (

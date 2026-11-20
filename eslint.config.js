@@ -28,12 +28,10 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
-      ...require('eslint-config-airbnb').rules, // Airbnb rules
 
-      // Airbnb overrides or customizations
       'react/jsx-filename-extension': ['warn', { extensions: ['.jsx', '.js'] }],
       'react/jsx-no-target-blank': 'off',
-      'react/prop-types': 'off', // Disable PropTypes if using TypeScript
+      'react/prop-types': 'off', // The project doesn't use PropTypes
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

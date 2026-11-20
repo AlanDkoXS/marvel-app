@@ -1,12 +1,15 @@
-import React, { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useCallback } from 'react';
 
-const BackgroundContext = createContext();
+const BackgroundContext = createContext(null);
 
 export const BackgroundProvider = ({ children }) => {
   const [backgroundImage, setBackgroundImage] = useState('');
+  const clearBackground = useCallback(() => setBackgroundImage(''), []);
 
   return (
-    <BackgroundContext.Provider value={{ backgroundImage, setBackgroundImage }}>
+    <BackgroundContext.Provider
+      value={{ backgroundImage, setBackgroundImage, clearBackground }}
+    >
       {children}
     </BackgroundContext.Provider>
   );
