@@ -1,112 +1,163 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router';
-import {
-  fetchCharacterDetails,
-  fetchComics,
-  fetchSeries,
-  fetchStories,
-} from '../hooks/useFetch';
+import { useParams, Link, useNavigate } from 'react-router';
+import useCharacters from '../hooks/useCharacters';
 import { useAudio } from '../context/AudioContext';
 import Layout from '../components/Layout';
+import Loading from '../components/Loading';
 import { useBackground } from '../context/BackgroundContext';
-import Comics from '../components/Comics';
-import Series from '../components/Series';
-import Stories from '../components/Stories';
 import '../assets/styles/WikiDetails.css';
 
+const SECTIONS = ['powerstats', 'biography', 'appearance', 'connections'];
+
+const isKnown = (value) =>
+  value !== null && value !== undefined && value !== '-' && value !== '';
+
+// Renders label/value rows, skipping values the dataset marks as unknown.
+const DetailList = ({ items }) => {
+  const known = items.filter(([, value]) => isKnown(value));
+  if (known.length === 0) return <p>No information available</p>;
+
+  return (
+    <dl className="details__list">
+      {known.map(([label, value]) => (
+        <div key={label} className="details__row">
+          <dt>{label}</dt>
+          <dd>{Array.isArray(value) ? value.join(', ') : value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+};
+
+const Powerstats = ({ stats }) => (
+  <ul className="powerstats">
+    {Object.entries(stats).map(([stat, value]) => (
+      <li key={stat} className="powerstats__item">
+        <span className="powerstats__label">{stat}</span>
+        <span className="powerstats__bar" aria-hidden="true">
+          <span style={{ width: `${value}%` }} />
+        </span>
+        <span className="powerstats__value">{value}</span>
+      </li>
+    ))}
+  </ul>
+);
+
+const SectionContent = ({ section, character }) => {
+  const { biography, appearance, work, connections } = character;
+
+  switch (section) {
+    case 'powerstats':
+      return <Powerstats stats={character.powerstats} />;
+    case 'biography':
+      return (
+        <DetailList
+          items={[
+            ['Real name', character.fullName],
+            ['Aliases', character.aliases.length ? character.aliases : null],
+            ['Place of birth', biography.placeOfBirth],
+            ['First appearance', biography.firstAppearance],
+            ['Alignment', biography.alignment],
+            ['Occupation', work.occupation],
+            ['Base', work.base],
+          ]}
+        />
+      );
+    case 'appearance':
+      return (
+        <DetailList
+          items={[
+            ['Gender', appearance.gender],
+            ['Race', appearance.race],
+            ['Height', appearance.height?.filter(isKnown).join(' / ')],
+            ['Weight', appearance.weight?.filter(isKnown).join(' / ')],
+            ['Eye color', appearance.eyeColor],
+            ['Hair color', appearance.hairColor],
+          ]}
+        />
+      );
+    case 'connections':
+      return (
+        <DetailList
+          items={[
+            ['Group affiliation', connections.groupAffiliation],
+            ['Relatives', connections.relatives],
+          ]}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
 const WikiDetails = () => {
-  const { name } = useParams();
+  const { slug } = useParams();
+  const navigate = useNavigate();
   const { startAudio } = useAudio();
   const { backgroundImage } = useBackground();
-  const [character, setCharacter] = useState(null);
-  const [comics, setComics] = useState([]);
-  const [series, setSeries] = useState([]);
-  const [stories, setStories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeSection, setActiveSection] = useState('comics');
+  const { characters, loading, error, retry } = useCharacters();
+  const [activeSection, setActiveSection] = useState('powerstats');
 
   useEffect(() => {
     startAudio();
   }, [startAudio]);
 
-  useEffect(() => {
-    let ignore = false;
+  const character = characters.find((c) => c.slug === slug);
 
-    const loadCharacterData = async () => {
-      setLoading(true);
-      setError(null);
+  // Return to the search results (and their ?q=&page=) when we came from
+  // them; otherwise, e.g. on a shared link, go to the plain list.
+  const goBack = (event) => {
+    if (window.history.state?.idx > 0) {
+      event.preventDefault();
+      navigate(-1);
+    }
+  };
+  const backLink = (
+    <Link to="/wiki" onClick={goBack}>
+      Back
+    </Link>
+  );
 
-      try {
-        const fetchedCharacter = await fetchCharacterDetails(name);
-        // Three requests in total: one per collection, not one per item.
-        const [fetchedComics, fetchedSeries, fetchedStories] =
-          await Promise.all([
-            fetchComics(fetchedCharacter.id),
-            fetchSeries(fetchedCharacter.id),
-            fetchStories(fetchedCharacter.id),
-          ]);
-
-        if (!ignore) {
-          setCharacter(fetchedCharacter);
-          setComics(fetchedComics);
-          setSeries(fetchedSeries);
-          setStories(fetchedStories);
-        }
-      } catch (err) {
-        if (!ignore) {
-          setError(err.message || 'Error loading details');
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadCharacterData();
-    return () => {
-      ignore = true;
-    };
-  }, [name]);
-
-  if (loading) return <h2>Loading...</h2>;
-  if (error)
+  if (loading) return <Loading />;
+  if (error || !character)
     return (
       <Layout backgroundImage={backgroundImage}>
-        <p>{error}</p>
-        <Link to="/wiki">Back</Link>
+        <p>{error ? `Error: ${error}` : 'Character not found'}</p>
+        {error && <button onClick={retry}>Try again</button>}
+        {backLink}
       </Layout>
     );
 
   return (
-    <Layout backgroundImage={backgroundImage}>
+    <Layout backgroundImage={backgroundImage || character.images.lg}>
       <div className="wiki__details">
         <div className="character__container">
-          {character.thumbnail ? (
-            <img
-              src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-              alt={character.name}
-              className="character__image"
-            />
-          ) : (
-            <p>No image available</p>
-          )}
+          <img
+            src={character.images.md}
+            alt={character.name}
+            className="character__image"
+          />
           <h1>{character.name}</h1>
-          <p>{character.description}</p>
+          {character.fullName && <p>{character.fullName}</p>}
         </div>
-        <Link to="/wiki">Back</Link>
+        {backLink}
 
-        <div className="section__buttons">
-          <button onClick={() => setActiveSection('comics')}>Comics</button>
-          <button onClick={() => setActiveSection('series')}>Series</button>
-          <button onClick={() => setActiveSection('stories')}>Stories</button>
+        <div className="section__buttons" role="tablist">
+          {SECTIONS.map((section) => (
+            <button
+              key={section}
+              role="tab"
+              aria-selected={activeSection === section}
+              className={activeSection === section ? 'is-active' : undefined}
+              onClick={() => setActiveSection(section)}
+            >
+              {section[0].toUpperCase() + section.slice(1)}
+            </button>
+          ))}
         </div>
 
-        <div className="section__content">
-          {activeSection === 'comics' && <Comics comics={comics} />}
-          {activeSection === 'series' && <Series series={series} />}
-          {activeSection === 'stories' && <Stories stories={stories} />}
+        <div className="section__content" role="tabpanel">
+          <SectionContent section={activeSection} character={character} />
         </div>
       </div>
     </Layout>

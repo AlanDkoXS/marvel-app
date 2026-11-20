@@ -1,32 +1,27 @@
-import { useState } from 'react';
-
-const Search = ({ handleSearch }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const onSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      handleSearch(searchTerm.trim());
-    }
-  };
-
-  return (
-    <div className="search">
-      <form onSubmit={onSearch}>
-        <input
-          type="search"
-          placeholder="Search Marvel Characters"
-          value={searchTerm}
-          onChange={handleInputChange}
-        />
-        <button type="submit">Search</button>
-      </form>
-    </div>
-  );
-};
+// Controlled search box: results update as you type (see app/Wiki.jsx).
+const Search = ({ value, onChange, resultCount }) => (
+  <div className="search">
+    <form role="search" onSubmit={(e) => e.preventDefault()}>
+      <input
+        type="search"
+        placeholder="Search by name, real name or alias"
+        aria-label="Search Marvel characters"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        autoFocus
+      />
+      {value && (
+        <button type="button" onClick={() => onChange('')}>
+          Clear
+        </button>
+      )}
+    </form>
+    {resultCount !== null && (
+      <p className="search__count" aria-live="polite">
+        {resultCount} {resultCount === 1 ? 'character' : 'characters'}
+      </p>
+    )}
+  </div>
+);
 
 export default Search;

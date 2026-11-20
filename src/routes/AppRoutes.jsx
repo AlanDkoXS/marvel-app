@@ -22,7 +22,7 @@ function AppRoutes() {
             }
           />
           <Route
-            path="/wiki/:name"
+            path="/wiki/:slug"
             element={
               <ProtectedRoute>
                 <WikiDetails />

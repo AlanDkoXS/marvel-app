@@ -1,75 +1,87 @@
 .wiki__details {
-margin-top: 2rem;
-}
-
-.wiki__details .comics {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-  gap: 1rem;
-  justify-items: center;
-  max-width: 98%;
-  width: 100%;
-  padding: 1rem;
-}
-
-.wiki__details .comic {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.wiki__details .comic img {
-  width: 64px;
-  height: auto;
-  object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  margin-bottom: 0.5rem;
-}
-
-.wiki__details .comic p {
-  font-size: 0.9rem;
-  color: #fff;
-  max-width: 64px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-top: 2rem;
 }
 
 .character__image {
   width: 300px;
   height: 300px;
   border-radius: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
-.wiki__details .series {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-    gap: 1rem;
-    justify-items: center;
-    max-width: 96%;
-    width: 100%;
-    padding: 1rem;
-  }
+.section__buttons .is-active {
+  outline: 2px solid #ffcc00;
+}
 
-  .wiki__details .serie {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+.section__content {
+  width: 100%;
+  max-width: 640px;
+  margin: 1rem auto;
+  padding: 1rem;
+  text-align: left;
+}
 
-  .wiki__details .serie__image {
-    width: 64px;
-    height: auto;
-    object-fit: cover;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    margin-bottom: 0.5rem;
-  }
+.details__list {
+  margin: 0;
+}
 
-  .wiki__details .serie p {
-    font-size: 0.9rem;
-    color: #fff;
-    max-width: 64px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.details__row {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.details__row dt {
+  color: #ffcc00;
+}
+
+.details__row dd {
+  margin: 0;
+  color: #fff;
+}
+
+.powerstats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.powerstats__item {
+  display: grid;
+  grid-template-columns: 7rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+}
+
+.powerstats__label {
+  text-transform: capitalize;
+  color: #ffcc00;
+}
+
+.powerstats__bar {
+  height: 0.6rem;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.powerstats__bar span {
+  display: block;
+  height: 100%;
+  background: #e62429;
+}
+
+.powerstats__value {
+  text-align: right;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .details__row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
+}

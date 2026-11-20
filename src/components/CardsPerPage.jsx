@@ -1,3 +1,5 @@
+// eslint-disable-next-line react-refresh/only-export-components
+export const PER_PAGE_OPTIONS = [10, 25, 50];
 
 function CardsPerPage({ cardsPerPage, handleCardsPerPageChange }) {
   return (
@@ -8,9 +10,11 @@ function CardsPerPage({ cardsPerPage, handleCardsPerPageChange }) {
         value={cardsPerPage}
         onChange={handleCardsPerPageChange}
       >
-        <option value={10}>10</option>
-        <option value={25}>25</option>
-        <option value={50}>50</option>
+        {PER_PAGE_OPTIONS.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
       </select>
     </div>
   );

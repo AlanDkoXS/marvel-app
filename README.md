@@ -11,11 +11,11 @@ GitHub Repository: [https://github.com/AlanDkoXS/marvel-app](https://github.com/
 
 ## About
 
-Marvel Universe Characters is a web application designed to consume the Marvel API, allowing users to search and explore Marvel characters. The app requires user authentication to access character data, and it supports searching, pagination, and a detailed character view.
+Marvel Universe Characters is a web application that lets users to search and explore Marvel characters. The app requires user authentication to access character data, and it supports searching, pagination, and a detailed character view.
 
 ### Key Features:
 - **User Authentication**: Allows users to log in using local storage.
-- **Character Search**: Search for Marvel characters by name.
+- **Character Search**: Instant search by name, real name or alias, ignoring case, accents and punctuation.
 - **Pagination**: Navigate through multiple pages of characters.
 - **Detailed Views**: Access more details about each character via individual pages.
 - **Audio**: Background audio to enhance user experience.
@@ -41,10 +41,10 @@ Marvel Universe Characters is a web application designed to consume the Marvel A
 3. Start the development server:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
-   This will run the app locally at `http://localhost:3000`.
+   This will run the app locally at `http://localhost:5173`. No API keys are needed.
 
 ---
 
@@ -53,7 +53,7 @@ Marvel Universe Characters is a web application designed to consume the Marvel A
 - **React Router**: For handling routes and navigation.
 - **useContext**: For managing global state.
 - **useReducer**: For handling more complex state management.
-- **Marvel API**: To fetch character data.
+- **[SuperHero API](https://github.com/akabab/superhero-api)**: open dataset with the character data (the Marvel developer API was retired in late 2025).
 - **CSS/SCSS**: For styling the application.
 
 ---
