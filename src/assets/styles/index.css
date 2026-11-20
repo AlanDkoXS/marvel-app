@@ -1,83 +1,94 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+/* Comic-book theme: ink outlines, flat offset shadows, halftone dots. */
 :root {
-  font-family: 'Bangers', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --ink: #111;
+  --paper: #fffaf0;
+  --red: #e62429;
+  --red-dark: #b8161b;
+  --yellow: #ffd60a;
+  --blue: #1c64f2;
+
+  --font-title: 'Bangers', Impact, 'Arial Black', sans-serif;
+  --font-body: 'Comic Neue', 'Comic Sans MS', system-ui, sans-serif;
+
+  --border: 3px solid var(--ink);
+  --shadow: 5px 5px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --halftone: radial-gradient(rgb(0 0 0 / 0.22) 1.3px, transparent 1.7px);
+
+  --layout-max-width: 1200px;
+  --header-background: var(--red);
+
+  font-family: var(--font-body);
+  font-weight: 700;
   line-height: 1.5;
-  font-weight: 400;
-
-  /*   color-scheme: light dark; */
-  color: rgba(255, 255, 255, 0.87);
-  background-color: black;
-
+  color: var(--ink);
+  background-color: var(--red);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-
-  --font-banger: 'Bangers', sans-serif;
-  --layout-width: 100%;
-  --layout-max-width: 1200px;
-  --header-background: #e62429;
 }
 
-a {
-  display: inline-block;
-  margin-bottom: 15px;
-  padding: 10px 20px;
-  font-size: 1em;
-  font-family: 'Bangers', sans-serif;
-  font-weight: bold;
-  color: white;
-  background: #e62429;
-  text-transform: uppercase;
-  text-decoration: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
-}
-
-a:hover {
-  background: #c81e23;
-  transform: translateY(-2px);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  font-family: var(--font-banger), 'Inter', sans-serif;
+  overflow-x: hidden;
+  /* Red sunburst behind everything, with a halftone screen on top. */
+  background:
+    var(--halftone) 0 0 / 9px 9px,
+    repeating-conic-gradient(
+      from 0deg at 50% 0%,
+      var(--red) 0deg 7deg,
+      #d41d22 7deg 14deg
+    );
+  background-attachment: fixed;
 }
+
+/* ---------- Headings ---------- */
 
 h1,
 h2,
 h3,
 h4,
 h5 {
-  font-family: var(--font-banger), sans-serif;
-  color: #ffcc00;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+  font-family: var(--font-title);
+  font-weight: 400;
+  letter-spacing: 0.03em;
   line-height: 1.1;
 }
 
+h1,
+h2 {
+  color: var(--yellow);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 4px 4px 0 var(--ink);
+  transform: rotate(-2deg);
+}
+
 h1 {
-  font-size: 3.5em;
-  margin-bottom: 0.5em;
+  font-size: clamp(2.2rem, 8vw, 3.5rem);
+  margin: 1.5rem 0 1rem;
 }
 
 h2 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5em;
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  margin: 1rem 0;
 }
 
 h3 {
-  font-size: 2em;
+  font-size: 1.5rem;
 }
 
 ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 0;
 }
@@ -86,107 +97,188 @@ label {
   margin: 0.5rem;
 }
 
-button {
+/* ---------- Buttons and button-like links ---------- */
+
+button,
+a {
   display: inline-block;
-  margin: 0.5rem 0.5rem;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-family: 'Bangers', sans-serif;
-  font-weight: bold;
-  color: white;
-  background: #e62429;
+  margin: 0.5rem;
+  padding: 0.45rem 1.1rem;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
   text-transform: uppercase;
   text-decoration: none;
   text-align: center;
-  border: none;
-  border-radius: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: var(--ink);
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 0;
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
 }
 
-button:hover {
-  background: #c81e23;
-  transform: translateY(-4px);
+a {
+  color: #fff;
+  background: var(--red);
+  text-shadow: 1px 1px 0 var(--ink);
 }
 
-input {
-  width: 30vw;
+button:hover:not(:disabled),
+a:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+button:active:not(:disabled),
+a:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* ---------- Form controls ---------- */
+
+form {
+  margin: 0;
 }
 
 input,
 select {
   appearance: none;
-  display: inline-block;
-  width: auto;
-  max-width: 400px;
-  margin: 0.5rem 0.5rem;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  color: #ccc;
-  background-color: #1f1e1e;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+  margin: 0.5rem;
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  background-color: #fff;
+  border: var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-sm);
 }
 
-form {
-  margin: 2px;
-  width: 90%;
+input::placeholder {
+  color: #6b6b6b;
 }
 
 input:focus,
 select:focus {
   outline: none;
-  border-color: #e62429;
-  box-shadow: 0 0 6px rgba(230, 36, 41, 0.5);
+  box-shadow:
+    var(--shadow-sm),
+    0 0 0 3px var(--yellow);
 }
 
 select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
+  background-position: right 0.9rem center;
   background-size: 1rem;
+  cursor: pointer;
 }
 
-.input[type='number'] {
-  appearance: textfield;
-  -moz-appearance: textfield;
+/* ---------- Shared comic pieces ---------- */
+
+/* A paper panel with an ink border and a flat shadow. */
+.panel {
+  background: var(--paper);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
 }
 
-.input[type='number']::-webkit-inner-spin-button,
-.input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* A yellow narration caption, slightly tilted. */
+.caption {
+  display: inline-block;
+  padding: 0.2rem 0.75rem;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  background: var(--yellow);
+  border: var(--border);
+  box-shadow: var(--shadow-sm);
+  transform: rotate(-1.5deg);
 }
+
+/* ---------- Character grid ---------- */
 
 .container__cards {
   display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(1, 1fr);
-  gap: .5rem;
-  padding: .2rem;
-  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1.5rem;
   width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
+  margin: 1.5rem auto;
+  padding: 0;
 }
 
-@media (min-width: 728px) {
+@media (max-width: 480px) {
   .container__cards {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
 }
 
-@media (min-width: 900px) {
-  .container__cards {
-    grid-template-columns: repeat(4, 1fr);
+/* ---------- Loading ---------- */
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.loading p {
+  margin: 0;
+  padding: 1.5rem 2rem;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  background: var(--yellow);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  /* A jagged "impact" burst. */
+  clip-path: polygon(
+    50% 0%, 61% 18%, 82% 6%, 78% 30%, 100% 32%, 84% 50%, 100% 68%,
+    78% 70%, 82% 94%, 61% 82%, 50% 100%, 39% 82%, 18% 94%, 22% 70%,
+    0% 68%, 16% 50%, 0% 32%, 22% 30%, 18% 6%, 39% 18%
+  );
+  padding: 3rem 3.5rem;
+  animation: pop 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.94) rotate(-3deg);
+  }
+  to {
+    transform: scale(1.04) rotate(3deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

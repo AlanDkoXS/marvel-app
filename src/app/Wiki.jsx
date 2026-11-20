@@ -77,16 +77,16 @@ const Wiki = () => {
     if (loading) return <Loading />;
     if (error)
       return (
-        <div className="wiki__message">
+        <div className="panel wiki__message">
           <p>Error: {error}</p>
           <button onClick={retry}>Try again</button>
         </div>
       );
     if (results.length === 0)
       return (
-        <p className="wiki__message">
-          No characters match &ldquo;{query}&rdquo;
-        </p>
+        <div className="panel wiki__message">
+          <p>No characters match &ldquo;{query}&rdquo;</p>
+        </div>
       );
 
     return (
@@ -105,7 +105,7 @@ const Wiki = () => {
 
   return (
     <Layout backgroundImage={backgroundImage}>
-      <h1>Welcome {localStorage.getItem('user')}</h1>
+      <h1 className="welcome">Welcome, {localStorage.getItem('user')}!</h1>
       <Search
         value={query}
         onChange={handleSearch}

@@ -34,7 +34,7 @@ A React 19 + Vite 8 (SWC) single-page app, plain JS/JSX with no TypeScript. Rout
 - **Contexts:**
   - `BackgroundContext` (`backgroundImage`, `setBackgroundImage`, `clearBackground`) holds the hovered character's image, which `Layout` renders as the page background.
   - `AudioContext` (`isAudioPlaying`, `startAudio`, `stopAudio`; the functions are stable via `useCallback`) plays `assets/audio/intro.m4a` with a 20 s fade-out. `Wiki` starts it on mount and stops it on unmount. `WikiDetails` starts it too, so navigating between them in one commit keeps it playing.
-- **Styling:** plain CSS per page/component in `src/assets/styles/`, with BEM-style class names (`layout__header`, `character__card`).
+- **Styling:** comic-book theme in plain CSS per page/component (`src/assets/styles/`), with BEM-style class names (`layout__header`, `character__card`). Design tokens (`--ink`, `--paper`, `--red`, `--yellow`, `--border`, `--shadow`, `--halftone`) and the shared `.panel` (paper box with an ink border) and `.caption` (tilted yellow box) classes live in `index.css`. Fonts come from Google Fonts in `index.html`: Bangers for titles and buttons, Comic Neue for body text. Cards use `aspect-ratio`, not fixed heights, and the grid is two columns at 480 px and below. Page sizes are 12/24/48 so rows fill evenly.
 
 ## Style
 

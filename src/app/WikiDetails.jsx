@@ -122,23 +122,29 @@ const WikiDetails = () => {
   if (error || !character)
     return (
       <Layout backgroundImage={backgroundImage}>
-        <p>{error ? `Error: ${error}` : 'Character not found'}</p>
-        {error && <button onClick={retry}>Try again</button>}
-        {backLink}
+        <div className="panel wiki__message">
+          <p>{error ? `Error: ${error}` : 'Character not found'}</p>
+          {error && <button onClick={retry}>Try again</button>}
+          {backLink}
+        </div>
       </Layout>
     );
 
   return (
     <Layout backgroundImage={backgroundImage || character.images.lg}>
-      <div className="wiki__details">
+      <div className="panel wiki__details">
         <div className="character__container">
           <img
             src={character.images.md}
             alt={character.name}
             className="character__image"
           />
-          <h1>{character.name}</h1>
-          {character.fullName && <p>{character.fullName}</p>}
+          <div>
+            <h1>{character.name}</h1>
+            {character.fullName && (
+              <p className="caption">{character.fullName}</p>
+            )}
+          </div>
         </div>
         {backLink}
 

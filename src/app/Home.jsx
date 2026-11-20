@@ -1,5 +1,7 @@
 import { useReducer, useState } from 'react';
 import { useNavigate } from 'react-router';
+import Layout from '../components/Layout';
+import '../assets/styles/Home.css';
 
 const initialState = {
   name: '',
@@ -43,36 +45,41 @@ const Home = () => {
   };
 
   return (
-    <div>
-      {user ? (
-        <>
-          <h1>Welcome back, {user}!</h1>
-          <button onClick={handleGoToWiki}>Enter</button>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <h1>Welcome to Marvel Universe</h1>
-          <form onSubmit={handleSubmit}>
-            <label>
-              Enter your name:
+    <Layout>
+      <div className="panel home">
+        {user ? (
+          <>
+            <h1>Welcome back, {user}!</h1>
+            <p className="home__bubble">Ready for another adventure?</p>
+            <div className="home__actions">
+              <button onClick={handleGoToWiki}>Enter</button>
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1>Welcome to the Marvel Universe</h1>
+            <p className="home__bubble">Who goes there, hero?</p>
+            <form className="home__form" onSubmit={handleSubmit}>
+              <label htmlFor="name">Your name</label>
               <input
-                style={{ marginLeft: '.5rem' }}
+                id="name"
                 type="text"
                 value={state.name}
                 onChange={(e) =>
                   dispatch({ type: 'SET_NAME', payload: e.target.value })
                 }
+                autoComplete="given-name"
                 required
               />
-            </label>
-            <button type="submit" disabled={loading}>
-              {loading ? 'Loading...' : 'Send'}
-            </button>
-          </form>
-        </>
-      )}
-    </div>
+              <button type="submit" disabled={loading}>
+                {loading ? 'Loading...' : 'Enter'}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </Layout>
   );
 };
 

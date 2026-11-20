@@ -1,0 +1,63 @@
+.home {
+  max-width: 34rem;
+  margin: 1.5rem auto 0;
+  padding: 2rem 1.5rem;
+}
+
+.home h1 {
+  margin-top: 0;
+}
+
+/* A speech bubble from the narrator. */
+.home__bubble {
+  position: relative;
+  display: inline-block;
+  margin: 0.5rem 0 2rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.15rem;
+  background: #fff;
+  border: var(--border);
+  border-radius: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.home__bubble::before,
+.home__bubble::after {
+  content: '';
+  position: absolute;
+  left: 2rem;
+  border-style: solid;
+}
+
+.home__bubble::before {
+  bottom: -1rem;
+  border-width: 1rem 1rem 0 0;
+  border-color: var(--ink) transparent transparent;
+}
+
+.home__bubble::after {
+  bottom: -0.55rem;
+  left: calc(2rem + 3px);
+  border-width: 0.65rem 0.6rem 0 0;
+  border-color: #fff transparent transparent;
+}
+
+.home__form,
+.home__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.home__form label {
+  width: 100%;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+}
+
+.home__form input {
+  flex: 1 1 12rem;
+  max-width: 18rem;
+}

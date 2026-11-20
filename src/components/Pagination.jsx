@@ -15,19 +15,19 @@ const Pagination = ({ page, totalPages, handlePageChange }) => {
   const totalPageCount = totalPages > 0 ? totalPages : 1;
 
   return (
-    <div>
+    <nav className="pagination" aria-label="Pagination">
       <button onClick={goToPreviousPage} disabled={currentPage <= 1}>
         Previous
       </button>
 
-      <span>
+      <span className="caption">
         Page {currentPage} of {totalPageCount}
       </span>
 
       <button onClick={goToNextPage} disabled={currentPage >= totalPageCount}>
         Next
       </button>
-    </div>
+    </nav>
   );
 };
 

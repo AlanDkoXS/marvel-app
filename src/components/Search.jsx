@@ -2,14 +2,16 @@
 const Search = ({ value, onChange, resultCount }) => (
   <div className="search">
     <form role="search" onSubmit={(e) => e.preventDefault()}>
-      <input
-        type="search"
-        placeholder="Search by name, real name or alias"
-        aria-label="Search Marvel characters"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        autoFocus
-      />
+      <div className="search__bubble">
+        <input
+          type="search"
+          placeholder="Search by name, real name or alias"
+          aria-label="Search Marvel characters"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          autoFocus
+        />
+      </div>
       {value && (
         <button type="button" onClick={() => onChange('')}>
           Clear
@@ -17,7 +19,7 @@ const Search = ({ value, onChange, resultCount }) => (
       )}
     </form>
     {resultCount !== null && (
-      <p className="search__count" aria-live="polite">
+      <p className="caption search__count" aria-live="polite">
         {resultCount} {resultCount === 1 ? 'character' : 'characters'}
       </p>
     )}

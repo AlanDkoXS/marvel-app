@@ -1,9 +1,9 @@
 // eslint-disable-next-line react-refresh/only-export-components
-export const PER_PAGE_OPTIONS = [10, 25, 50];
+export const PER_PAGE_OPTIONS = [12, 24, 48];
 
 function CardsPerPage({ cardsPerPage, handleCardsPerPageChange }) {
   return (
-    <div>
+    <div className="wiki__toolbar">
       <label htmlFor="cardsPerPage">Cards per page:</label>
       <select
         id="cardsPerPage"

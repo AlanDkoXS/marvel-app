@@ -17,7 +17,11 @@ const Layout = ({ children, backgroundImage }) => {
       <div className="layout__background-container">
         <div
           className="layout__background"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
+          style={
+            backgroundImage
+              ? { backgroundImage: `url(${backgroundImage})` }
+              : undefined
+          }
         ></div>
         <div className="layout__overlay"></div>
       </div>
