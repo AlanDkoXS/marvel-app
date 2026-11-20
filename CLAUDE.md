@@ -12,7 +12,7 @@ npm run preview   # serve the built dist/
 npm run lint      # ESLint 9 flat config (eslint.config.js)
 ```
 
-There is no test runner or test suite configured. Node >= 22.22 is required, because `react-router` 8 needs it.
+There is no test runner or test suite configured. Node >= 22.22 is required, because `react-router` 8 needs it; `.nvmrc` pins Node 24, and Netlify builds with it.
 
 ESLint stays on 9.x: `eslint-plugin-react` doesn't support ESLint 10 yet. `eslint-plugin-react-hooks` 7 includes the React Compiler rules, such as `react-hooks/set-state-in-effect` and `react-hooks/immutability`. Prefer lazy `useState` initializers and refs over working around them.
 
